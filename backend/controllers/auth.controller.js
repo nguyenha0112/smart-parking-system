@@ -49,6 +49,79 @@ export async function signup(req, res) {
   }
 }
 
+//update
+export async function updateAccount(req, res) {
+  try {
+    const {
+      TenDangNhap,
+      MatKhau,
+      ViDienTuThanhToan,
+      TenKhachHang,
+      GioiTinh,
+      SDT,
+    } = req.body;
+
+    const taiKhoan = await TaiKhoan.findById(req.user._id);
+    if (!taiKhoan) {
+      return res.status(404).json({ message: "Không tìm thấy tài khoản." });
+    }
+
+    // Hash mật khẩu nếu có cập nhật
+    if (MatKhau) {
+      taiKhoan.MatKhau = await bcryptjs.hash(MatKhau, 10);
+    }
+
+    if (TenDangNhap) taiKhoan.TenDangNhap = TenDangNhap;
+    if (ViDienTuThanhToan) taiKhoan.ViDienTuThanhToan = ViDienTuThanhToan;
+
+    const khachHang = await KhachHang.findById(taiKhoan.KhachHang);
+    if (TenKhachHang) khachHang.TenKhachHang = TenKhachHang;
+    if (GioiTinh) khachHang.GioiTinh = GioiTinh;
+    if (SDT) khachHang.SDT = SDT;
+
+    await taiKhoan.save();
+    await khachHang.save();
+
+    res.status(200).json({ message: "Cập nhật thành công." });
+  } catch (error) {
+    console.error("Lỗi khi cập nhật tài khoản:", error);
+    res.status(500).json({ message: "Đã xảy ra lỗi khi cập nhật." });
+  }
+}
+
+//delete
+export async function deleteAccount(req, res) {
+  try {
+    const taiKhoan = await TaiKhoan.findById(req.user._id);
+    if (!taiKhoan) {
+      return res.status(404).json({ message: "Không tìm thấy tài khoản." });
+    }
+
+    await KhachHang.findByIdAndDelete(taiKhoan.KhachHang);
+    await TaiKhoan.findByIdAndDelete(req.user._id);
+
+    res.clearCookie("jwt-token"); // Đăng xuất luôn
+    res.status(200).json({ message: "Tài khoản đã được xóa." });
+  } catch (error) {
+    console.error("Lỗi khi xóa tài khoản:", error);
+    res.status(500).json({ message: "Đã xảy ra lỗi khi xóa tài khoản." });
+  }
+}
+
+//get all
+export const getAllAccounts = async (req, res) => {
+  try {
+    const accounts = await TaiKhoan.find().populate("KhachHang");
+    res.status(200).json({ success: true, data: accounts });
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách tài khoản:", error);
+    res.status(500).json({ success: false, message: "Lỗi server" });
+  }
+};
+
+
+
+
 // Hàm đăng nhập người dùng
 export async function login(req, res) {
   try {
