@@ -7,6 +7,8 @@ import authRoutes from './routes/auth.route.js';
 import { connectDB } from './config/bd.js';
 import { ENV_VARS } from './config/envVars.js';
 
+//import hóa đơn route
+import hoaDonRoutes from "./routes/hoadon.route.js";
 
 const app = express();
 const PORT = ENV_VARS.PORT;
@@ -15,6 +17,8 @@ const PORT = ENV_VARS.PORT;
 app.use(cookieParser());
 app.use(express.json()); 
 
+// các API của hóa đơn
+app.use("/api/hoadon", hoaDonRoutes);
 
 app.use("/api/v1/auth", authRoutes);
 console.log("MONGO_URI: ", process.env.MONGO_URI);

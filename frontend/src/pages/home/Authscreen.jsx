@@ -8,7 +8,7 @@ const Authscreen = () => {
 
   return (
     <div className="h-screen w-full hero-bg">
-    authscrren
+    MY NAME IS GWOUTH, ĐẸP TRAI NHẤT ĐÀ NẴNG.
     </div>
   );
 };
