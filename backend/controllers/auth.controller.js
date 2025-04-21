@@ -31,12 +31,13 @@ export async function signup(req, res) {
       SDT,
     });
 
-    // Tạo tài khoản mới
+    // Tạo tài khoản mới với vai trò mặc định là "customer"
     const taiKhoan = await TaiKhoan.create({
       KhachHang: khachHang._id,
       ViDienTuThanhToan,
       TenDangNhap,
       MatKhau: hashedPassword,
+      Role: "customer", // Mặc định là khách hàng
     });
 
     // Tạo token và set cookie

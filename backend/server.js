@@ -4,11 +4,12 @@ import cookieParser from 'cookie-parser';
 // import route
 import authRoutes from './routes/auth.route.js';
 import bookingRoutes from './routes/booking.route.js';
+import parkingRoutes from './routes/parking.route.js';
 
 import { connectDB } from './config/bd.js';
 import { ENV_VARS } from './config/envVars.js';
 
-import { protect } from './middleware/protect.js';
+import { protectRoute,checkRole } from './middleware/protectRoute.js';
 
 
 const app = express();
@@ -20,7 +21,8 @@ app.use(express.json());
 
 
 app.use("/api/v1/auth", authRoutes); // tài khoản
-app.use("/api/v1/booking",protect,bookingRoutes); // đặt chỗ
+app.use("/api/v1/booking",bookingRoutes); // đặt chỗ
+app.use("/api/v1/parking", protectRoute, checkRole(["admin"]), parkingRoutes);
 
 
 
