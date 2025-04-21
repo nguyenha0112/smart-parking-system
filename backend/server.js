@@ -11,10 +11,14 @@ import { ENV_VARS } from './config/envVars.js';
 
 const app = express();
 const PORT = ENV_VARS.PORT;
-// tao bien moi truong
+
 
 app.use(cookieParser());
 app.use(express.json());
+
+app.use('/api/v1/ticket', ticketRoutes);
+app.use('/api/v1/auth', authRoutes);
+console.log('MONGO_URI: ', process.env.MONGO_URI);
 
 app.use('/api/v1/ticket', ticketRoutes);
 app.use('/api/v1/auth', authRoutes);
