@@ -1,7 +1,7 @@
-import { TaiKhoan } from "../models/taikhoan.model.js";
-import { KhachHang } from "../models/khachhang.model.js";
-import bcryptjs from "bcryptjs";
-import { generateTokenandsetcookie } from "../utils/generateToken.js";
+import { TaiKhoan } from '../models/taikhoan.model.js';
+import { KhachHang } from '../models/khachhang.model.js';
+import bcryptjs from 'bcryptjs';
+import { generateTokenandsetcookie } from '../utils/generateToken.js';
 
 // Hàm đăng ký người dùng mới
 export async function signup(req, res) {
@@ -18,7 +18,7 @@ export async function signup(req, res) {
     // Kiểm tra nếu tài khoản đã tồn tại
     const existingUser = await TaiKhoan.findOne({ TenDangNhap });
     if (existingUser) {
-      return res.status(400).json({ message: "Tên đăng nhập đã tồn tại." });
+      return res.status(400).json({ message: 'Tên đăng nhập đã tồn tại.' });
     }
 
     // Hash mật khẩu
@@ -42,10 +42,10 @@ export async function signup(req, res) {
     // Tạo token và set cookie
     const token = generateTokenandsetcookie(taiKhoan._id, res);
 
-    res.status(201).json({ message: "Đăng ký thành công.", token });
+    res.status(201).json({ message: 'Đăng ký thành công.', token });
   } catch (error) {
-    console.error("Lỗi khi đăng ký:", error);
-    res.status(500).json({ message: "Đã xảy ra lỗi khi đăng ký." });
+    console.error('Lỗi khi đăng ký:', error);
+    res.status(500).json({ message: 'Đã xảy ra lỗi khi đăng ký.' });
   }
 }
 
@@ -63,7 +63,7 @@ export async function updateAccount(req, res) {
 
     const taiKhoan = await TaiKhoan.findById(req.user._id);
     if (!taiKhoan) {
-      return res.status(404).json({ message: "Không tìm thấy tài khoản." });
+      return res.status(404).json({ message: 'Không tìm thấy tài khoản.' });
     }
 
     // Hash mật khẩu nếu có cập nhật
@@ -82,10 +82,10 @@ export async function updateAccount(req, res) {
     await taiKhoan.save();
     await khachHang.save();
 
-    res.status(200).json({ message: "Cập nhật thành công." });
+    res.status(200).json({ message: 'Cập nhật thành công.' });
   } catch (error) {
-    console.error("Lỗi khi cập nhật tài khoản:", error);
-    res.status(500).json({ message: "Đã xảy ra lỗi khi cập nhật." });
+    console.error('Lỗi khi cập nhật tài khoản:', error);
+    res.status(500).json({ message: 'Đã xảy ra lỗi khi cập nhật.' });
   }
 }
 
@@ -94,33 +94,30 @@ export async function deleteAccount(req, res) {
   try {
     const taiKhoan = await TaiKhoan.findById(req.user._id);
     if (!taiKhoan) {
-      return res.status(404).json({ message: "Không tìm thấy tài khoản." });
+      return res.status(404).json({ message: 'Không tìm thấy tài khoản.' });
     }
 
     await KhachHang.findByIdAndDelete(taiKhoan.KhachHang);
     await TaiKhoan.findByIdAndDelete(req.user._id);
 
-    res.clearCookie("jwt-token"); // Đăng xuất luôn
-    res.status(200).json({ message: "Tài khoản đã được xóa." });
+    res.clearCookie('jwt-token'); // Đăng xuất luôn
+    res.status(200).json({ message: 'Tài khoản đã được xóa.' });
   } catch (error) {
-    console.error("Lỗi khi xóa tài khoản:", error);
-    res.status(500).json({ message: "Đã xảy ra lỗi khi xóa tài khoản." });
+    console.error('Lỗi khi xóa tài khoản:', error);
+    res.status(500).json({ message: 'Đã xảy ra lỗi khi xóa tài khoản.' });
   }
 }
 
 //get all
 export const getAllAccounts = async (req, res) => {
   try {
-    const accounts = await TaiKhoan.find().populate("KhachHang");
+    const accounts = await TaiKhoan.find().populate('KhachHang');
     res.status(200).json({ success: true, data: accounts });
   } catch (error) {
-    console.error("Lỗi khi lấy danh sách tài khoản:", error);
-    res.status(500).json({ success: false, message: "Lỗi server" });
+    console.error('Lỗi khi lấy danh sách tài khoản:', error);
+    res.status(500).json({ success: false, message: 'Lỗi server' });
   }
 };
-
-
-
 
 // Hàm đăng nhập người dùng
 export async function login(req, res) {
@@ -128,11 +125,11 @@ export async function login(req, res) {
     const { TenDangNhap, MatKhau } = req.body;
 
     // Kiểm tra tài khoản
-    const user = await TaiKhoan.findOne({ TenDangNhap }).populate("KhachHang");
+    const user = await TaiKhoan.findOne({ TenDangNhap }).populate('KhachHang');
     if (!user) {
       return res
         .status(400)
-        .json({ message: "Tên đăng nhập hoặc mật khẩu không đúng." });
+        .json({ message: 'Tên đăng nhập hoặc mật khẩu không đúng.' });
     }
 
     // Kiểm tra mật khẩu
@@ -140,26 +137,26 @@ export async function login(req, res) {
     if (!isPasswordValid) {
       return res
         .status(400)
-        .json({ message: "Tên đăng nhập hoặc mật khẩu không đúng." });
+        .json({ message: 'Tên đăng nhập hoặc mật khẩu không đúng.' });
     }
 
     // Tạo token và set cookie
     const token = generateTokenandsetcookie(user._id, res);
 
-    res.status(200).json({ message: "Đăng nhập thành công.", token });
+    res.status(200).json({ message: 'Đăng nhập thành công.', token });
   } catch (error) {
-    console.error("Lỗi khi đăng nhập:", error);
-    res.status(500).json({ message: "Đã xảy ra lỗi khi đăng nhập." });
+    console.error('Lỗi khi đăng nhập:', error);
+    res.status(500).json({ message: 'Đã xảy ra lỗi khi đăng nhập.' });
   }
 }
 
 // Hàm đăng xuất người dùng
 export async function logout(req, res) {
   try {
-    res.clearCookie("jwt-token");
-    res.status(200).json({ message: "Đăng xuất thành công." });
+    res.clearCookie('jwt-token');
+    res.status(200).json({ message: 'Đăng xuất thành công.' });
   } catch (error) {
-    console.error("Lỗi khi đăng xuất:", error);
-    res.status(500).json({ message: "Đã xảy ra lỗi khi đăng xuất." });
+    console.error('Lỗi khi đăng xuất:', error);
+    res.status(500).json({ message: 'Đã xảy ra lỗi khi đăng xuất.' });
   }
 }
