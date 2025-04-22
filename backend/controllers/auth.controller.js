@@ -3,6 +3,7 @@ import { KhachHang } from "../models/khachhang.model.js";
 import bcryptjs from "bcryptjs";
 import { generateTokenandsetcookie } from "../utils/generateToken.js";
 
+
 // Hàm đăng ký người dùng mới
 export async function signup(req, res) {
   try {
@@ -31,12 +32,13 @@ export async function signup(req, res) {
       SDT,
     });
 
-    // Tạo tài khoản mới
+    // Tạo tài khoản mới với vai trò mặc định là "customer"
     const taiKhoan = await TaiKhoan.create({
       KhachHang: khachHang._id,
       ViDienTuThanhToan,
       TenDangNhap,
       MatKhau: hashedPassword,
+      Role: "customer", // Mặc định là khách hàng
     });
 
     // Tạo token và set cookie
@@ -163,3 +165,38 @@ export async function logout(req, res) {
     res.status(500).json({ message: "Đã xảy ra lỗi khi đăng xuất." });
   }
 }
+
+export const createAdminAccount = async (req, res) => {
+  try {
+    const { TenDangNhap, MatKhau, ViDienTuThanhToan } = req.body;
+
+    // Kiểm tra nếu tài khoản đã tồn tại
+    const existingUser = await TaiKhoan.findOne({ TenDangNhap });
+    if (existingUser) {
+      return res.status(400).json({ message: "Tên đăng nhập đã tồn tại." });
+    }
+
+    // Hash mật khẩu
+    const hashedPassword = await bcryptjs.hash(MatKhau, 10);
+
+    // Tạo tài khoản admin
+    const adminAccount = await TaiKhoan.create({
+      TenDangNhap,
+      MatKhau: hashedPassword,
+      ViDienTuThanhToan,
+      Role: "admin", // Vai trò là admin
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Tài khoản admin đã được tạo thành công.",
+      data: adminAccount,
+    });
+  } catch (error) {
+    console.error("Lỗi khi tạo tài khoản admin:", error);
+    res.status(500).json({
+      success: false,
+      message: "Đã xảy ra lỗi khi tạo tài khoản admin.",
+    });
+  }
+};
