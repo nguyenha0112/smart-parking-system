@@ -22,5 +22,6 @@ router.post("/logout", logout); // Đăng xuất
 router.put("/update", protectRoute, checkRole(["customer", "manager", "admin"]), updateAccount); // Cập nhật tài khoản
 router.delete("/delete", protectRoute, checkRole(["admin"]), deleteAccount); // Xóa tài khoản
 router.get("/getall", protectRoute, checkRole(["admin"]), getAllAccounts);   // Xem tất cả tài khoản
+router.post("/create-admin", protectRoute, checkRole(["admin"]), createAdminAccount);
 
 export default router;

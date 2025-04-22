@@ -116,26 +116,6 @@ export async function createTestNotification(req, res) {
 }
 
 
-// them bai xe
-export async function themBaiDoXe(req, res) {
-  try {
-    const { TenBai, DiaChi, SoChoTrong } = req.body;
 
-    if (!TenBai || !DiaChi || SoChoTrong === undefined) {
-      return res.status(400).json({ message: 'Vui lòng nhập đầy đủ tên bãi, địa chỉ và số chỗ trống.' });
-    }
-
-    const baiDoXeMoi = await BaiDoXe.create({
-      TenBai,
-      DiaChi,
-      SoChoTrong,
-    });
-
-    res.status(201).json({ message: 'Thêm bãi đỗ xe thành công.', baiDoXe: baiDoXeMoi });
-  } catch (error) {
-    console.error('Lỗi khi thêm bãi đỗ xe:', error);
-    res.status(500).json({ message: 'Không thể thêm bãi đỗ xe.', error: error.message });
-  }
-}
 
 
