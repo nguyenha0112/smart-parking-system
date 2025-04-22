@@ -6,14 +6,14 @@ import {
   saveFavoriteParking,
   createTestNotification
 } from "../controllers/accountManager.controller.js";
-import { protect } from "../middleware/protect.js";
+import { protectRoute } from "../middleware/protectRoute.js";
 
 const router = express.Router();
 
 
-router.post('/history', protect, saveHistory);
-router.get('/notifications', protect, getNotifications);
-router.post('/favorite-parking', protect, saveFavoriteParking);
-router.post('/test-notification', protect, createTestNotification);
+router.post('/history', protectRoute, saveHistory); // Lưu lịch sử
+router.get('/notifications', protectRoute, getNotifications); // Lấy thông báo
+router.post('/favorite-parking', protectRoute, saveFavoriteParking); // Lưu bãi đỗ yêu thích
+router.post('/test-notification', protectRoute, createTestNotification); // Tạo thông báo mẫu (test)
 
 export default router;

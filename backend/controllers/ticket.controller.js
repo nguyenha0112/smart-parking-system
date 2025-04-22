@@ -1,11 +1,11 @@
 import Ticket from '../models/ticket.model.js';
-import QRCode from 'qrcode';
-import { v4 as uuidv4 } from 'uuid';
+import QRCode from 'qrcode'; // qrqr
+import { v4 as uuidv4 } from 'uuid'; // thu vien tao id 
 
 // Tạo QR code và lưu vé
 export async function createTicket(req, res, type) {
   try {
-    const { licensePlate, ticketType, seatNumber } = req.body;
+    const { licensePlate, ticketType, seatNumber } = req.body; // biển số , loại vé , số slotslot
 
     const ticketId = uuidv4();
     const qrCodeData = `TicketID: ${ticketId}, LicensePlate: ${licensePlate}, TicketType: ${ticketType.toLowerCase()}, SeatNumber: ${seatNumber}`;

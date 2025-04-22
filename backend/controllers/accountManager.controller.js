@@ -2,8 +2,8 @@ import { TaiKhoan } from "../models/taikhoan.model.js";
 import { History } from '../models/historyAccount.model.js';
 import { Notification } from '../models/notification.model.js';
 import { FavoriteParking } from '../models/favoriteParking.js';
-import {BaiDoXe} from '../models/baigiuxe.model.js'
-import { protect } from "../middleware/protect.js"; 
+
+
 
 // 1. Lưu lịch sử hoạt động
 export async function saveHistory(req, res) {

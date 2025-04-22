@@ -25,7 +25,7 @@ app.use('/api/v1/ticket', ticketRoutes);
 app.use('/api/v1/account', accountManagerRoutes);
 app.use('/api/v1/booking', bookingRoutes); // đặt chỗ
 app.use('/api/v1/parking', protectRoute, checkRole(['admin']), parkingRoutes);
-
+console.log("connect", ENV_VARS.MONGO_URI);
 
 connectDB()
   .then(() => {
