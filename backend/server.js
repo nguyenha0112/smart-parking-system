@@ -3,7 +3,6 @@ import cookieParser from 'cookie-parser';
 
 // import route
 import authRoutes from './routes/auth.route.js';
-import ticketRoutes from './routes/ticket.route.js';
 
 import { connectDB } from './config/bd.js';
 import { ENV_VARS } from './config/envVars.js';
@@ -15,7 +14,6 @@ const PORT = ENV_VARS.PORT;
 app.use(cookieParser());
 app.use(express.json());
 
-app.use('/api/v1/ticket', ticketRoutes);
 app.use('/api/v1/auth', authRoutes);
 console.log('MONGO_URI: ', process.env.MONGO_URI);
 
