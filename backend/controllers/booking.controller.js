@@ -1,14 +1,22 @@
-import { KhachHang } from "../models/khachhang.model.js";
-import { BaiDoXe } from "../models/baigiuxe.model.js";
-import { HoaDonChiTiet } from "../models/hoadonchitiet.model.js";
+import { KhachHang } from '../models/khachhang.model.js';
+import { BaiDoXe } from '../models/baigiuxe.model.js';
+import { HoaDonChiTiet } from '../models/hoadonchitiet.model.js';
 
 // Đặt chỗ đậu xe
 export const booking = async (req, res) => {
   try {
     const { baiDoXeId, thoiGianVao, thoiGianRa } = req.body;
 
+    // Kiểm tra dữ liệu đầu vào
+    if (!baiDoXeId || !thoiGianVao || !thoiGianRa) {
+      return res.status(400).json({ message: "Vui lòng cung cấp đầy đủ thông tin." });
+    }
+
     // Lấy idKhachHang từ tài khoản đang đăng nhập
-    const khachHangId = req.user.KhachHang;
+    const khachHangId = req.user?.KhachHang;
+    if (!khachHangId) {
+      return res.status(400).json({ message: "Không tìm thấy thông tin khách hàng trong tài khoản." });
+    }
 
     // Kiểm tra khách hàng
     const khachHang = await KhachHang.findById(khachHangId);
@@ -18,18 +26,21 @@ export const booking = async (req, res) => {
 
     // Kiểm tra bãi đỗ xe
     const baiDoXe = await BaiDoXe.findById(baiDoXeId);
-    if (!baiDoXe || baiDoXe.SoChoTrong <= 0) {
+    if (!baiDoXe) {
+      return res.status(404).json({ message: "Không tìm thấy bãi đỗ xe." });
+    }
+    if (baiDoXe.SoChoTrong <= 0) {
       return res.status(400).json({ message: "Bãi đỗ xe không khả dụng." });
     }
 
     // Tạo hóa đơn chi tiết
     const hoaDonChiTiet = await HoaDonChiTiet.create({
-      HoaDon: null, // Có thể liên kết với hóa đơn tổng nếu cần
-      DichVu: null, // Có thể thêm dịch vụ nếu cần
+      HoaDon: null,
+      DichVu: null,
       TenBai: baiDoXe.TenBai,
-      ThoiGianVao,
-      ThoiGianRa,
-      GiaTien: 0, // Tính giá tiền sau
+      ThoiGianVao: thoiGianVao, // Sử dụng đúng tên biến
+      ThoiGianRa: thoiGianRa,   // Sử dụng đúng tên biến
+      GiaTien: 0,
       HinhThucThanhToan: "Chưa thanh toán",
     });
 
@@ -42,8 +53,8 @@ export const booking = async (req, res) => {
       data: hoaDonChiTiet,
     });
   } catch (error) {
-    console.error("Lỗi khi đặt chỗ:", error);
-    res.status(500).json({ message: "Đã xảy ra lỗi khi đặt chỗ." });
+    console.error("Lỗi khi đặt chỗ:", error.message, error.stack);
+    res.status(500).json({ message: "Đã xảy ra lỗi khi đặt chỗ.", error: error.message });
   }
 };
 
@@ -55,7 +66,7 @@ export const deletebooking = async (req, res) => {
     // Tìm hóa đơn chi tiết
     const hoaDonChiTiet = await HoaDonChiTiet.findById(hoaDonChiTietId);
     if (!hoaDonChiTiet) {
-      return res.status(404).json({ message: "Không tìm thấy hóa đơn chi tiết." });
+      return res.status(404).json({ message: 'Không tìm thấy hóa đơn chi tiết.' });
     }
 
     // Tìm bãi đỗ xe liên quan
@@ -68,10 +79,10 @@ export const deletebooking = async (req, res) => {
     // Xóa hóa đơn chi tiết
     await HoaDonChiTiet.findByIdAndDelete(hoaDonChiTietId);
 
-    res.status(200).json({ message: "Hủy chỗ thành công." });
+    res.status(200).json({ message: 'Hủy chỗ thành công.' });
   } catch (error) {
-    console.error("Lỗi khi hủy chỗ:", error);
-    res.status(500).json({ message: "Đã xảy ra lỗi khi hủy chỗ." });
+    console.error('Lỗi khi hủy chỗ:', error);
+    res.status(500).json({ message: 'Đã xảy ra lỗi khi hủy chỗ.' });
   }
 };
 
@@ -83,7 +94,7 @@ export const updatebooking = async (req, res) => {
     // Tìm hóa đơn chi tiết
     const hoaDonChiTiet = await HoaDonChiTiet.findById(hoaDonChiTietId);
     if (!hoaDonChiTiet) {
-      return res.status(404).json({ message: "Không tìm thấy hóa đơn chi tiết." });
+      return res.status(404).json({ message: 'Không tìm thấy hóa đơn chi tiết.' });
     }
 
     // Tìm bãi đỗ xe cũ
@@ -96,7 +107,7 @@ export const updatebooking = async (req, res) => {
     // Tìm bãi đỗ xe mới
     const baiDoXeMoi = await BaiDoXe.findById(baiDoXeMoiId);
     if (!baiDoXeMoi || baiDoXeMoi.SoChoTrong <= 0) {
-      return res.status(400).json({ message: "Bãi đỗ xe mới không khả dụng." });
+      return res.status(400).json({ message: 'Bãi đỗ xe mới không khả dụng.' });
     }
 
     // Cập nhật thông tin hóa đơn chi tiết
@@ -107,9 +118,9 @@ export const updatebooking = async (req, res) => {
     baiDoXeMoi.SoChoTrong -= 1;
     await baiDoXeMoi.save();
 
-    res.status(200).json({ message: "Thay đổi chỗ thành công." });
+    res.status(200).json({ message: 'Thay đổi chỗ thành công.' });
   } catch (error) {
-    console.error("Lỗi khi thay đổi chỗ:", error);
-    res.status(500).json({ message: "Đã xảy ra lỗi khi thay đổi chỗ." });
+    console.error('Lỗi khi thay đổi chỗ:', error);
+    res.status(500).json({ message: 'Đã xảy ra lỗi khi thay đổi chỗ.' });
   }
 };
