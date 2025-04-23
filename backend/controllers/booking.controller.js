@@ -38,8 +38,8 @@ export const booking = async (req, res) => {
       HoaDon: null,
       DichVu: null,
       TenBai: baiDoXe.TenBai,
-      ThoiGianVao: thoiGianVao, // Sử dụng đúng tên biến
-      ThoiGianRa: thoiGianRa,   // Sử dụng đúng tên biến
+      ThoiGianVao: thoiGianVao,
+      ThoiGianRa: thoiGianRa,  
       GiaTien: 0,
       HinhThucThanhToan: "Chưa thanh toán",
     });
