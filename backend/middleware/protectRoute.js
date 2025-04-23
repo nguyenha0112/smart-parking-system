@@ -1,16 +1,16 @@
-import jwt from "jsonwebtoken";
-import { TaiKhoan } from "../models/taikhoan.model.js";
-import { ENV_VARS } from "../config/envVars.js";
+import jwt from 'jsonwebtoken';
+import { TaiKhoan } from '../models/taikhoan.model.js';
+import { ENV_VARS } from '../config/envVars.js';
 
 // Middleware bảo vệ route, kiểm tra token
 export const protectRoute = async (req, res, next) => {
   try {
     // Lấy token từ cookie
-    const token = req.cookies["jwt-token"];
+    const token = req.cookies['jwt-token'];
     if (!token) {
       return res.status(401).json({
         success: false,
-        message: "Không có token. Vui lòng đăng nhập để tiếp tục.",
+        message: 'Không có token. Vui lòng đăng nhập để tiếp tục.',
       });
     }
 
@@ -19,16 +19,16 @@ export const protectRoute = async (req, res, next) => {
     if (!decoded) {
       return res.status(401).json({
         success: false,
-        message: "Token không hợp lệ.",
+        message: 'Token không hợp lệ.',
       });
     }
 
     // Tìm tài khoản người dùng trong database
-    const user = await TaiKhoan.findById(decoded.id).populate("KhachHang");
+    const user = await TaiKhoan.findById(decoded.id).populate('KhachHang');
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "Không tìm thấy người dùng.",
+        message: 'Không tìm thấy người dùng.',
       });
     }
 
@@ -38,10 +38,10 @@ export const protectRoute = async (req, res, next) => {
     // Tiếp tục xử lý request
     next();
   } catch (err) {
-    console.error("Lỗi trong middleware protectRoute:", err.message);
+    console.error('Lỗi trong middleware protectRoute:', err.message);
     return res.status(500).json({
       success: false,
-      message: "Lỗi máy chủ. Vui lòng thử lại sau.",
+      message: 'Lỗi máy chủ. Vui lòng thử lại sau.',
     });
   }
 };
@@ -64,7 +64,7 @@ export const checkRole = (allowedRoles) => {
     if (!isAllowed) {
       return res.status(403).json({
         success: false,
-        message: "Bạn không có quyền truy cập vào chức năng này.",
+        message: 'Bạn không có quyền truy cập vào chức năng này.',
       });
     }
 
