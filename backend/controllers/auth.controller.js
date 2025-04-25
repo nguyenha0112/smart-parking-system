@@ -121,9 +121,6 @@ export const getAllAccounts = async (req, res) => {
   }
 };
 
-
-
-
 // Hàm đăng nhập người dùng
 export async function login(req, res) {
   try {

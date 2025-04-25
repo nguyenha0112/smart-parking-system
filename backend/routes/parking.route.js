@@ -1,14 +1,15 @@
 import express from "express";
 import { addParking,deleteParking,updateParking,getAllParking } from "../controllers/parking.controller.js";
-
+import { protectRoute, checkRole } from "../middleware/protectRoute.js";
 
 
 const router = express.Router();
 
-router.post("/addparking", addParking); // thêm bãi đỗ xe
-router.post("/deleteparking",deleteParking); // xóa bãi đỗ xe
-router.post("/updateparking", updateParking); // cập nhật bãi đỗ xe
-router.get("/getallparking", getAllParking); // lấy tất cả bãi đỗ xe
+
+router.post("/addparking", protectRoute, checkRole(["manager", "admin"]), addParking);
+router.post("/deleteparking", protectRoute, checkRole(["manager", "admin"]), deleteParking);
+router.post("/updateparking", protectRoute, checkRole(["manager", "admin"]), updateParking);
+router.get("/getallparking", protectRoute, checkRole(["admin"]), getAllParking);
 
 
 

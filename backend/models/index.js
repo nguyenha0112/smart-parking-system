@@ -8,3 +8,6 @@ export { HoaDonChiTiet } from "./hoadonchitiet.model.js";
 export { DichVu } from "./dichvu.model.js";
 export { PhieuDenBu } from "./phieudenbu.model.js";
 export { QuanLyBaiDo } from "./quanlybaido.model.js";
+export { FavoriteParking } from "./favoriteParking.js";
+export { History } from "./historyAccount.model.js";
+export { Notification } from "./notification.model.js";
