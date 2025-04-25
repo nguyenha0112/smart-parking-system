@@ -2,7 +2,7 @@ import Ticket from '../models/ticket.model.js';
 import QRCode from 'qrcode';
 import { v4 as uuidv4 } from 'uuid';
 
-// Tạo QR code và lưu vé
+// API tạo vé mới
 export async function createTicket(req, res, type) {
   try {
     const { licensePlate, ticketType, seatNumber } = req.body;
@@ -32,6 +32,12 @@ export async function createTicket(req, res, type) {
   }
 }
 
+// // Tạo vé online
+// export const createOnlineTicket = (req, res) => createTicket(req, res, 'online');
+
+// // Tạo vé tại cổng
+// export const createOnsiteTicket = (req, res) => createTicket(req, res, 'onsite');
+
 // API get tất cả vé
 export async function getAllTicket(req, res) {
   try {
@@ -47,12 +53,6 @@ export async function getAllTicket(req, res) {
     });
   }
 }
-
-// // Tạo vé online
-// export const createOnlineTicket = (req, res) => createTicket(req, res, 'online');
-
-// // Tạo vé tại cổng
-// export const createOnsiteTicket = (req, res) => createTicket(req, res, 'onsite');
 
 // Xác minh vé khi quét mã QR
 export const verifyTicket = async (req, res) => {
