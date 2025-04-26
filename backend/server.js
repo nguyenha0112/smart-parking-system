@@ -24,7 +24,7 @@ app.use('/api/v1/auth', authRoutes); // tài khoản
 app.use('/api/v1/ticket', ticketRoutes);
 app.use('/api/v1/account', accountManagerRoutes);
 app.use('/api/v1/booking', bookingRoutes); // đặt chỗ
-app.use('/api/v1/parking', protectRoute, checkRole(['admin']), parkingRoutes);
+app.use('/api/v1/parking', parkingRoutes);
 console.log("connect", ENV_VARS.MONGO_URI);
 
 connectDB()
