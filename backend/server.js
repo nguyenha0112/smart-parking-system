@@ -7,6 +7,9 @@ import ticketRoutes from './routes/ticket.route.js';
 import accountManagerRoutes from './routes/accountManager.routes.js';
 import bookingRoutes from './routes/booking.route.js';
 import parkingRoutes from './routes/parking.route.js';
+import paymentRoutes from './routes/payment.route.js';
+import serviceRoutes from './routes/service.route.js';
+import invoiceRoutes from './routes/invoice.route.js';
 
 import { connectDB } from './config/bd.js';
 import { ENV_VARS } from './config/envVars.js';
@@ -18,6 +21,11 @@ const PORT = ENV_VARS.PORT;
 
 app.use(cookieParser());
 app.use(express.json());
+
+
+app.use('/api/payment', paymentRoutes); // Route cho thanh toán
+app.use('/api/service', serviceRoutes); // Route cho đặt dịch vụ
+app.use('/api/invoice', invoiceRoutes); // Route cho tạo hóa đơn
 
 // Routes
 app.use('/api/v1/auth', authRoutes); // tài khoản
