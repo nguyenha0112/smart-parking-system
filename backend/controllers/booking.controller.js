@@ -12,19 +12,7 @@ export const booking = async (req, res) => {
       return res.status(400).json({ message: "Vui lòng cung cấp đầy đủ thông tin." });
     }
 
-    // Lấy idKhachHang từ tài khoản đang đăng nhập
-    const khachHangId = req.user?.KhachHang;
-    if (!khachHangId) {
-      return res.status(400).json({ message: "Không tìm thấy thông tin khách hàng trong tài khoản." });
-    }
-
-    // Kiểm tra khách hàng
-    const khachHang = await KhachHang.findById(khachHangId);
-    if (!khachHang) {
-      return res.status(404).json({ message: "Không tìm thấy khách hàng." });
-    }
-
-    // Kiểm tra bãi đỗ xe
+    // Lấy thông tin bãi đỗ xe
     const baiDoXe = await BaiDoXe.findById(baiDoXeId);
     if (!baiDoXe) {
       return res.status(404).json({ message: "Không tìm thấy bãi đỗ xe." });
@@ -33,14 +21,22 @@ export const booking = async (req, res) => {
       return res.status(400).json({ message: "Bãi đỗ xe không khả dụng." });
     }
 
+    // Tính số giờ đặt chỗ
+    const thoiGianVaoDate = new Date(thoiGianVao);
+    const thoiGianRaDate = new Date(thoiGianRa);
+    const soGio = Math.ceil((thoiGianRaDate - thoiGianVaoDate) / (1000 * 60 * 60)); // Làm tròn lên
+
+    // Tính giá tiền
+    const giaTien = soGio * baiDoXe.GiaTien;
+
     // Tạo hóa đơn chi tiết
     const hoaDonChiTiet = await HoaDonChiTiet.create({
       HoaDon: null,
       DichVu: null,
       TenBai: baiDoXe.TenBai,
-      ThoiGianVao: thoiGianVao,
-      ThoiGianRa: thoiGianRa,  
-      GiaTien: 0,
+      ThoiGianVao: thoiGianVaoDate,
+      ThoiGianRa: thoiGianRaDate,
+      GiaTien: giaTien,
       HinhThucThanhToan: "Chưa thanh toán",
     });
 

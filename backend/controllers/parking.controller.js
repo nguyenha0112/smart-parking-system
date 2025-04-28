@@ -6,7 +6,7 @@ import { KhachHang } from "../models/khachhang.model.js";
 // Thêm bãi đỗ xe
 export const addParking = async (req, res) => {
   try {
-    const { TenBai, DiaChi, SoChoTrong } = req.body;
+    const { TenBai, DiaChi, SoChoTrong,GiaTien } = req.body;
 
     // Kiểm tra nếu thông tin không đầy đủ
     if (!TenBai || !DiaChi || !SoChoTrong) {
@@ -21,6 +21,7 @@ export const addParking = async (req, res) => {
       TenBai,
       DiaChi,
       SoChoTrong,
+      GiaTien,
     });
 
     res.status(201).json({
@@ -73,7 +74,7 @@ export const deleteParking = async (req, res) => {
 // Cập nhật bãi đỗ xe
 export const updateParking = async (req, res) => {
   try {
-    const { parkingId, TenBai, DiaChi, SoChoTrong } = req.body;
+    const { parkingId, TenBai, DiaChi, SoChoTrong,giaTien } = req.body;
 
     // Kiểm tra nếu không có ID bãi đỗ xe
     if (!parkingId) {
@@ -86,7 +87,7 @@ export const updateParking = async (req, res) => {
     // Tìm và cập nhật bãi đỗ xe
     const updatedParking = await BaiDoXe.findByIdAndUpdate(
       parkingId,
-      { TenBai, DiaChi, SoChoTrong },
+      { TenBai, DiaChi, SoChoTrong, giaTien },
       { new: true, runValidators: true }
     );
 
