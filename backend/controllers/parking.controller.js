@@ -9,7 +9,7 @@ export const addParking = async (req, res) => {
     const { TenBai, DiaChi, SoChoTrong,GiaTien } = req.body;
 
     // Kiểm tra nếu thông tin không đầy đủ
-    if (!TenBai || !DiaChi || !SoChoTrong) {
+    if (!TenBai || !DiaChi || !SoChoTrong||!GiaTien) {
       return res.status(400).json({
         success: false,
         message: "Vui lòng cung cấp đầy đủ thông tin bãi đỗ xe.",
