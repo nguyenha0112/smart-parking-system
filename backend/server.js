@@ -7,6 +7,7 @@ import ticketRoutes from './routes/ticket.route.js';
 import accountManagerRoutes from './routes/accountManager.routes.js';
 import bookingRoutes from './routes/booking.route.js';
 import parkingRoutes from './routes/parking.route.js';
+import supportCustomerRoutes from './routes/supportCustomer.routes.js';
 
 import { connectDB } from './config/bd.js';
 import { ENV_VARS } from './config/envVars.js';
@@ -24,6 +25,7 @@ app.use('/api/v1/auth', authRoutes); // tài khoản
 app.use('/api/v1/ticket', ticketRoutes);
 app.use('/api/v1/account', accountManagerRoutes);
 app.use('/api/v1/booking', bookingRoutes); // đặt chỗ
+app.use('/api/v1/support_customer', protectRoute, supportCustomerRoutes);
 app.use('/api/v1/parking', protectRoute, checkRole(['admin']), parkingRoutes);
 console.log("connect", ENV_VARS.MONGO_URI);
 
